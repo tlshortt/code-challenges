@@ -1,0 +1,78 @@
+/* In the interest of time, doing all styles here in one file */
+/* In a real project, would break these out into component-specific CSS files... */
+/* ...starting with fare-section */
+
+.fare-calculator {
+  background: #fff;
+  border: 1px solid #ccc;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.fare-header {
+  display: flex;
+  align-items: center;
+  background: #555;
+  color: #fff;
+  padding: 0.75rem 1rem;
+}
+
+.fare-header .logo {
+  height: 24px;
+  margin-right: 0.5rem;
+}
+
+.fare-header h1 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.fare-section {
+  padding: 1rem;
+  border-top: 1px solid #ddd;
+}
+
+.fare-section label,
+.fare-section p.label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.fare-section select,
+.fare-section input[type="number"] {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+}
+
+.fare-section small.helper {
+  display: block;
+  margin-top: 0.25rem;
+  padding: 0 0.25rem;
+  text-align: left;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.fare-section label input[type="radio"] {
+  margin-right: 0.4rem;
+}
+
+.fare-footer {
+  background: #555;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+}
+
+.fare-footer p {
+  margin: 0 0 0.25rem 0;
+}
+
+.fare-footer strong {
+  font-size: 1.5rem;
+}
