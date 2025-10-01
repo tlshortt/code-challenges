@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { type Option } from "../utils/types";
 
 type RadioProps = {
@@ -10,6 +10,13 @@ type RadioProps = {
 };
 
 const Radio: React.FC<RadioProps> = memo(({ label, name, options, value, onChange}) => {
+  const handleChange = useCallback((e: { target: { value: string; }; }) => {
+    const selectedOption = options.find(option => String(option.value) === e.target.value);
+    if (selectedOption) {
+      onChange(selectedOption);
+    }
+  }, [options, onChange]);
+
   return (
     <>
         <legend className="label">{label}</legend>
@@ -21,12 +28,7 @@ const Radio: React.FC<RadioProps> = memo(({ label, name, options, value, onChang
                 name={name}
                 value={option.value}
                 checked={value?.value === option.value}
-                onChange={e => {
-                    const selectedOption = options.find(option => String(option.value) === e.target.value);
-                    if (selectedOption) {
-                      onChange(selectedOption);
-                    }
-                }}
+                onChange={handleChange}
               />
               {option.name}
             </label>
