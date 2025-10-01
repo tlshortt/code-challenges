@@ -3,12 +3,14 @@ import septaLogo from "./assets/septa-logo.svg";
 import Select from "./components/Select";
 import Radio from "./components/Radio";
 import TextInput from "./components/TextInput";
-import { useGetFares } from "./hooks/useGetFares";
+import { useFaresService } from "./services/faresService";
 
 const App = () => {
-  const { fares, loading, error } = useGetFares("/fares.json");
+  const { zoneOptions, timeOptions, purchaseTypeOptions, loading, error } = useFaresService("/fares.json");
 
-  console.log("fares:", fares);
+  console.log("zone:", zoneOptions);
+  console.log("time:", timeOptions);
+  console.log("purchase:", purchaseTypeOptions);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
@@ -21,16 +23,16 @@ const App = () => {
       </header>
 
       <div className="fare-section">
-        <Select label="Where are you going?" ariaDescribedBy="zones-helper" selectId="zone" options={["Zone 1", "Zone 2", "Zone 3", "Zone 4"]} />
+        <Select label="Where are you going?" ariaDescribedBy="zones-helper" selectId="zone" options={zoneOptions} />
       </div>
 
       <div className="fare-section">
-        <Select label="When are you riding?" ariaDescribedBy="riding-helper" selectId="riding" options={["Anytime", "Weekdays", "Evenings or Weekends"]} />
+        <Select label="When are you riding?" ariaDescribedBy="riding-helper" selectId="riding" options={timeOptions} />
         <small className="helper">"info" from json goes here</small>
       </div>
 
       <div className="fare-section">
-        <Radio label="Where will you purchase the fare?" name="purchase" options={["Station Kiosk", "Onboard"]} />
+        <Radio label="Where will you purchase the fare?" name="purchase" options={purchaseTypeOptions} />
       </div>
 
       <div className="fare-section">

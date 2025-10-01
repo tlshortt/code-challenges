@@ -1,7 +1,9 @@
+/* Just responsible for fetching fare data along with loading, errors, etc */
+
 import { useState, useEffect } from "react";
 
 export const useGetFares = (url: string) => {
-  const [fares, setFares] = useState<any>(null);
+  const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -13,7 +15,7 @@ export const useGetFares = (url: string) => {
         const response = await fetch(url);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const json = await response.json();
-        setFares(json);
+        setData(json);
       } catch (err) {
         setError(err instanceof Error ? err : new Error(String(err)));
       } finally {
@@ -24,5 +26,5 @@ export const useGetFares = (url: string) => {
     getFares();
   }, [url]);
 
-  return { fares, loading, error };
+  return { data, loading, error };
 };
