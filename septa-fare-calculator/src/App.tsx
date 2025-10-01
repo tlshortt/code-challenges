@@ -1,16 +1,55 @@
+import { useEffect } from "react";
 import "./App.css";
 import septaLogo from "./assets/septa-logo.svg";
 import Select from "./components/Select";
 import Radio from "./components/Radio";
-import TextInput from "./components/TextInput";
+import NumberInput from "./components/NumberInput";
 import { useFaresService } from "./services/faresService";
+import { useFareStore } from "./store/fareStore";
 
 const App = () => {
-  const { zoneOptions, timeOptions, purchaseTypeOptions, loading, error } = useFaresService("/fares.json");
+  const { 
+    zoneOptions, 
+    timeOptions,
+    purchaseTypeOptions,
+    fullData,
+    timeHelperInfo,
+    purchaseHelperInfo,
+    bulkPriceMinimum,
+    loading,
+    error
+  } = useFaresService("/fares.json");
+ 
+  const {
+    selectedZone,
+    selectedTime,
+    selectedPurchaseType,
+    numberOfRides,
+    calculatedFare,
+    setSelectedZone,
+    setSelectedTime,
+    setSelectedPurchaseType,
+    setNumberOfRides,
+    setFaresData
+  } = useFareStore();
 
-  console.log("zone:", zoneOptions);
-  console.log("time:", timeOptions);
-  console.log("purchase:", purchaseTypeOptions);
+  // Set fares data in store when loaded
+  useEffect(() => {
+    if (fullData?.zones) {
+      setFaresData(fullData.zones);
+    }
+  }, [fullData, setFaresData]);
+
+  const currentTimeHelperText =
+    numberOfRides >= bulkPriceMinimum
+      ? timeHelperInfo?.["anytime"] ?? ""
+      : selectedTime?.value
+      ? timeHelperInfo?.[selectedTime.value] ?? ""
+      : "";
+
+  const currentPurchaseHelperText = selectedPurchaseType && purchaseHelperInfo
+    ? purchaseHelperInfo[selectedPurchaseType.value] 
+    : "";
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
@@ -23,25 +62,55 @@ const App = () => {
       </header>
 
       <div className="fare-section">
-        <Select label="Where are you going?" ariaDescribedBy="zones-helper" selectId="zone" options={zoneOptions} />
+        <Select 
+          label="Where are you going?" 
+          ariaDescribedBy="zones-helper" 
+          selectId="zone" 
+          options={zoneOptions}
+          value={selectedZone}
+          onChange={setSelectedZone}
+        />
       </div>
 
       <div className="fare-section">
-        <Select label="When are you riding?" ariaDescribedBy="riding-helper" selectId="riding" options={timeOptions} />
-        <small className="helper">"info" from json goes here</small>
+        <Select 
+          label="When are you riding?" 
+          ariaDescribedBy="riding-helper" 
+          selectId="riding" 
+          options={timeOptions}
+          value={selectedTime}
+          onChange={setSelectedTime}
+        />
+        <small className="helper">{currentTimeHelperText}</small>
       </div>
 
       <div className="fare-section">
-        <Radio label="Where will you purchase the fare?" name="purchase" options={purchaseTypeOptions} />
+        <Radio 
+          label="Where will you purchase the fare?" 
+          name="purchase" 
+          options={purchaseTypeOptions}
+          value={selectedPurchaseType}
+          onChange={setSelectedPurchaseType}
+        />
+        <small className="helper">{currentPurchaseHelperText}</small>
       </div>
 
       <div className="fare-section">
-        <TextInput label="How many rides will you need?" type="number" inputId="rides" />
+        <NumberInput 
+          label="How many rides will you need?" 
+          type="number" 
+          inputId="rides"
+          value={numberOfRides}
+          onChange={setNumberOfRides}
+        />
       </div>
 
       <footer className="fare-footer">
         <p>Your fare will cost</p>
-        {/* <strong>${fare.toFixed(2)}</strong> */}
+        {calculatedFare && <strong>${calculatedFare.toFixed(2)}</strong>}
+        {!calculatedFare && selectedZone && selectedTime && selectedPurchaseType && (
+          <em>Calculating...</em>
+        )}
       </footer>
     </div>
   );

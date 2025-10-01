@@ -1,35 +1,44 @@
-import { useState } from "react";
+import { memo } from "react";
+import { type Option } from "../utils/types";
 
 type SelectProps = {
   label: string;
   selectId: string;
-  options: string[];
+  options: Option[];
+  value: Option | null;
   ariaDescribedBy?: string;
+  onChange: (option: Option | null) => void;
 };
 
-const Select: React.FC<SelectProps> = ({ label, selectId, options, ariaDescribedBy, ...props }) => {
-  const [val, setVal] = useState("");
-
+const Select: React.FC<SelectProps> = memo(({ label, selectId, options, value, onChange, ariaDescribedBy, ...props }) => {
   return (
     <>
-        <label htmlFor="zone">{label}</label>
+        <label htmlFor={selectId}>{label}</label>
         <select
           id={selectId}
-          value={val}
+          value={value ? value.value : ""}
           aria-describedby={ariaDescribedBy}
-          onChange={(e) => setVal(e.target.value)}
+          onChange={e => {
+            if (e.target.value === "") {
+              onChange(null);
+            } else {
+              const selectedOption = options.find(option => String(option.value) === e.target.value);
+              onChange(selectedOption || null);
+            }
+          }}
           {...props}
         >
+          <option value="">Select an option</option>
           {
             options.map((option) => (
-              <option key={option}>
-                {option}
+              <option key={option.value} value={option.value}>
+                {option.name}
               </option>
             ))
           }
         </select>
     </>
   );
-}
+});
 
 export default Select;
