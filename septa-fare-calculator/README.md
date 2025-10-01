@@ -31,3 +31,15 @@ When you take regional rail in and out of the city, the fare price is affected b
 * [Think Company Development Standards](https://standards.thinkcompany.dev/)
 * [SEPTA Fares](http://www.septa.org/fares/ticket/index.html)
 * [SEPTA Logo (SVG)](https://commons.wikimedia.org/wiki/File:SEPTA.svg)
+
+
+## To run
+* From septa-fare-calculator, `yarn install`
+* `yarn dev`
+* Navigate to [localhost:5173](http://localhost:5173/)
+
+## Solution
+* In order to get up and running quickly, focus on the solution, and not be burdened with manual boilerplating, I used Vite
+* Notable libs/tech:  standard React features (hooks, components), TypeScript, Zustand (state management), lodash utility lib
+* Next steps (didn't do): unit test faresService calculation, e2e test the UI (e.g. cypress or Playwright)
+* I understand the bulk pricing concept but I'm unclear about whether or not "Anytime" can be explicitly selected by a user, or if that is a concept that just applies to other states for purposes of 10-ticket pricing. In real life, I would clarify before implementing anything
